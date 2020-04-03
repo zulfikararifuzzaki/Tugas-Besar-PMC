@@ -1,21 +1,27 @@
-float paralel(int r1, int r2)
-{
-	return(r1*r2/(r1+r2))
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <math.h>
+
+struct komponen{
+	char jenis;
+	int value;
+	struct komponen *kiri;
+	struct komponen *kanan;
 	}
 
 int main()
-{
-	char resistor[50];
-	char kapasitor[50];
+{	//DEKLARASI VARIABEL
+	FILE *fptr;
+	char* fname = (char*)malloc(sizeof(char));
+	char cjenis;
+	int cvalue;
 	
-	printf("Masukkan rangkaian resistor : ");
-	scanf("%s", resistor);
-	printf("Masukkan rangkaian kapasitor : ");
-	scanf("%s", kapasitor);
-	/* Nah sampe sini tinggal ngolah string resistor sama kapasitor
-	 * (R1 S R2) P (R3)
-	 * (C1 S C2) P (C3)
-	 * Nah buat resistor, S tinggal diganti plus
-	 * Kalo P, ntar diganti paralel, pake function paralel
-	 * */
-	}
+	//INPUT FILE
+	printf("Masukkan nama file external : ");
+	gets(fname);
+	fptr = fopen(filename, "r");
+	//BACA FILE
+	
+}
