@@ -6,9 +6,9 @@
 
 struct komponen{
 	char jenis;
-	int value;
-	struct komponen *kiri;
-	struct komponen *kanan;
+	float value;
+	char kiri[2];
+	char kanan[2];
 	} komponen;
 
 int main()
@@ -16,13 +16,11 @@ int main()
 	FILE *fptr;
 	char* fname = (char*)malloc(sizeof(char));
 	char data[50];
-	komponen resistor[5] = (komponen*)malloc(sizeof(komponen));
-	komponen kapasitor[5] = (komponen*)malloc(sizeof(komponen));
+	komponen resistor[6] = (komponen*)malloc(sizeof(komponen));
+	komponen kapasitor[6] = (komponen*)malloc(sizeof(komponen));
 	komponen temp = (komponen*)malloc(sizeof(komponen));
 	int inc_r = 0;
 	int inc_c = 0;
-	float r_eki = 0;
-	float c_eki = 0;
 	int inc1 = 0;
 	int inc2 = 0;
 	
@@ -50,12 +48,25 @@ int main()
 			}
 		}
 		//SAMPAI DISINI SEMUA RESISTOR DAN KAPASITOR SUDAH MASUK ARRAY
+		resistor[5].char = 'R';
+		resistor[5].value = 0;
+		strcpy(resistor[5].kiri, "xx");
+		strcpy(resistor[5].kanan, "xx");
+		
+		kapasitor[5].char = 'C';
+		kapasitor[5].value = 0;
+		strcpy(kapasitor[5].kiri, "xx");
+		strcpy(kapasitor[5].kanan, "xx");
+		
 		//mencari R ekivalen
-		for (inc1 = 0; inc1<5; ++inc1)
+		for (inc1 = 0; inc1<6; ++inc1)
 		{
-			for(inc2 = 5; inc2>5-inc1; --inc2)
+			for(inc2 = 6; inc2>6-inc1; --inc2)
 			{
-				if ()
+				if (strcmp(resistor[inc1].kiri, resistor[inc2].kiri) == 0 && strcmp(resistor[inc1].kanan, resistor[inc2].kanan)==0) //paralel
+				{
+					
+					}
 			}
 		}
 	}
