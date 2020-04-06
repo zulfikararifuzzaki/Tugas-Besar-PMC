@@ -160,7 +160,8 @@ int getEqCircuit(struct Branch R[],char R_str[],struct tempBranch Rx,struct temp
             if (R_str[i] == 'R'){
                 tmp1 = atoi(&R_str[i+1]);
                 Rx.key[n] = tmp1;
-                n++;    
+                n++;
+                last_R = tmp1;
             }
 
             if (R_str[i]=='S') {Rx.conn_type = 'S';}
@@ -179,9 +180,9 @@ int main(){
     struct Branch C[5];
     struct tempBranch Rp,Ro;
     struct tempBranch Cp;
-    R[1].value = 15;
-    R[2].value = 30;
-    R[3].value = 20;
+    R[1].value = 10;
+    R[2].value = 20;
+    R[3].value = 30;
     C[1].value = 2000;
     C[2].value = 6000;
     C[3].value = 3000;
@@ -193,7 +194,7 @@ int main(){
     float Vs = 30;
 
     // Req dalam satuan Ohm
-    float Req = 30;
+    float Req = 60;
 
     // Ceq dalam satuan nF
     float Ceq = 470;
