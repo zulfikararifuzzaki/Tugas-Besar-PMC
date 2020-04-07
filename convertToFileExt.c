@@ -78,15 +78,75 @@ void addRdata(struct Branch R[], struct tempBranch Rp,int last_R, float Is,float
 
 }
 
-int isExistBracket(char R_str[]){
-    for(int i = 0; i<strlen(R_str);++i){
-        if(R_str[i] =='('){
+void addCdata(struct Branch C[], struct tempBranch Cp,int last_C, float Is,float Vs,char C_str[]){
+
+    float Ip_temp = (Cp.value *Is)/(Cp.value+C[last_C].value);
+    float Vp_temp = (Cp.value *Vs)/(Cp.value+C[last_C].value);
+    
+    if (isExistBracket(C_str)){
+
+        if (Cp.conn_type == 'S'){
+
+            C[Cp.key[0]].I = Ip_temp;
+            C[Cp.key[1]].I = Ip_temp;
+            C[last_C].I = Is - Ip_temp;
+
+            C[Cp.key[0]].V = C[Cp.key[0]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value);
+            C[Cp.key[1]].V = C[Cp.key[1]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value);
+            C[last_C].V = Vs;
+
+        }  
+
+        if (Cp.conn_type == 'P'){
+
+            C[Cp.key[0]].V = Vp_temp;
+            C[Cp.key[1]].V = Vp_temp;
+            C[last_C].V = Vs - Vp_temp;
+
+            C[Cp.key[0]].I = C[Cp.key[0]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value);
+            C[Cp.key[1]].I = C[Cp.key[1]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value);
+            C[last_C].I = Is;
+
+        }   
+    }
+    else{
+
+        if (Cp.conn_type == 'S'){
+            
+            C[Cp.key[0]].I = Is;
+            C[Cp.key[1]].I = Is;
+            C[Cp.key[2]].I = Is;
+
+            C[Cp.key[0]].V = C[Cp.key[0]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value + C[Cp.key[2]].value );
+            C[Cp.key[1]].V = C[Cp.key[1]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value + C[Cp.key[2]].value );
+            C[Cp.key[2]].V = C[Cp.key[2]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value + C[Cp.key[2]].value );
+        }
+
+        if (Cp.conn_type == 'P'){
+
+            C[Cp.key[0]].V = Vs;
+            C[Cp.key[1]].V = Vs;
+            C[Cp.key[2]].V = Vs;
+
+            C[Cp.key[0]].V = C[Cp.key[0]].value*Is/(C[Cp.key[0]].value + C[Cp.key[1]].value + C[Cp.key[2]].value );
+            C[Cp.key[1]].V = C[Cp.key[1]].value*Is/(C[Cp.key[0]].value + C[Cp.key[1]].value + C[Cp.key[2]].value );
+            C[Cp.key[2]].V = C[Cp.key[2]].value*Is/(C[Cp.key[0]].value + C[Cp.key[1]].value + C[Cp.key[2]].value );
+
+        }
+
+    }
+
+}
+
+int isExistBracket(char str[]){
+    for(int i = 0; i<strlen(str);++i){
+        if(str[i] =='('){
             return 1;
         }
     }
     return 0;
 }
-int getEqCircuit(struct Branch R[],char R_str[],struct tempBranch Rx,struct tempBranch *Ro){
+int getREquivalent(struct Branch R[],char R_str[],struct tempBranch Rx,struct tempBranch *Ro){
     int last_R;
     float val_tmp;
     
@@ -174,20 +234,106 @@ int getEqCircuit(struct Branch R[],char R_str[],struct tempBranch Rx,struct temp
     return last_R;
 }
 
+int getCEquivalent(struct Branch C[],char C_str[],struct tempBranch Cx,struct tempBranch *Co){
+    int last_C;
+    float val_tmp;
+    
+    int i=0,j,k,x = 0,n = 0;
+    int b_count = 0,count = 0;
+    int tmp1 = 0, tmp2 = 0;
+    if (isExistBracket(C_str)){
+        while(i < strlen(C_str)){
+
+            if (C_str[i] == 'C'){
+                tmp1 = atoi(&C_str[i+1]);
+                Cx.key[2] = tmp1;
+                last_C = tmp1;
+            }
+            if (C_str[i] == '('){
+            
+                j = i+1;
+                
+                while (C_str[j] != ')'){
+                    
+                    if(C_str[j] == 'P'){
+                        tmp1 = atoi(&C_str[j-2]);
+                        
+                        val_tmp = val_tmp + C[tmp1].value;
+                        tmp2 = atoi(&C_str[j+3]);
+                        val_tmp = val_tmp + C[tmp2].value;
+                        Cx.value = val_tmp;
+                        Cx.isReq = 1;
+                        Cx.key[x]= tmp1;
+                        Cx.key[x+1] = tmp2;
+                        Cx.conn_type = 'S';
+                        val_tmp = val_tmp - C[tmp2].value;
+                        
+        
+                    }
+
+                    if(C_str[j] == 'S'){
+
+                        tmp1 = atoi(&C_str[j-2]);
+                        tmp2 = atoi(&C_str[j+3]);
+
+                        if (!count){
+                            int y = C[tmp1].value;
+                        
+                            val_tmp = y;
+                            count++;
+                        }
+                        
+                        val_tmp = (val_tmp * C[tmp2].value)/(val_tmp + C[tmp2].value);
+                        Cx.value = val_tmp;
+                        Cx.isReq = 1;
+                        Cx.key[x]= tmp1;
+                        Cx.key[x+1] = tmp2;
+                        Cx.conn_type = 'P';
+                        
+                        
+                    }
+                    
+                    j++;
+                }
+                
+                count = 0;
+                i = j;
+            }
+            ++i;
+        }
+    }
+    else{
+        for(int i = 0;i<strlen(C_str);i++){
+            
+            if (C_str[i] == 'C'){
+                tmp1 = atoi(&C_str[i+1]);
+                Cx.key[n] = tmp1;
+                n++;
+                last_C = tmp1;
+            }
+
+            if (C_str[i]=='S') {Cx.conn_type = 'S';}
+            if (C_str[i]=='P') {Cx.conn_type = 'P';}
+        }
+        
+    }
+    *Co = Cx;
+    
+    return last_C;
+}
+
 int main(){
 
     struct Branch R[5];
     struct Branch C[5];
     struct tempBranch Rp,Ro;
-    struct tempBranch Cp;
+    struct tempBranch Cp,Co;
     R[1].value = 10;
     R[2].value = 20;
     R[3].value = 30;
-    C[1].value = 2000;
-    C[2].value = 6000;
-    C[3].value = 3000;
-    C[4].value = 5000;
-
+    C[1].value = 5;
+    C[2].value = 30;
+    C[3].value = 6;
     int lastidx;
     // Dua besaran Vs dan Is didapat dari proses simplifikasi RC (bagian zulfikar)
     // Vs dalam satuan V
@@ -197,7 +343,7 @@ int main(){
     float Req = 60;
 
     // Ceq dalam satuan nF
-    float Ceq = 470;
+    float Ceq = 10;
 
     // tau dalam satuan nanosecond
     float tau = Req*Ceq;
@@ -207,10 +353,10 @@ int main(){
 
     // Masih Test awal, command seri dan paralel di hard code
     char R_str[50];
-    strcpy(R_str,"R1 S R2 S R3");
+    strcpy(R_str,"R1 P R2 P R3");
 
     char C_str[50];
-    strcpy(C_str,"(C1 S C2) P C3");
+    strcpy(C_str,"C1 S (C2 P C3)");
     
 
     /* Menyederhanakan rangkaian agar bisa dipecah (menghilangkan bracket dari string)
@@ -221,15 +367,22 @@ int main(){
     */
 
    
-    lastidx = getEqCircuit(R,R_str,Rp,&Ro);
+    lastidx = getREquivalent(R,R_str,Rp,&Ro);
 
     addRdata(R,Ro,lastidx,Is,Vs,R_str);
 
-    
-    
-    printf("V = %.2f %.2f %.2f\n",R[1].V,R[2].V,R[3].V);
+    lastidx = getCEquivalent(C,C_str,Cp,&Co);
+    addCdata(C,Co,lastidx,Is,Vs,C_str);
 
-    printf("I = %.2f %.2f %.2f\n",R[1].I,R[2].I,R[3].I);
+    
+    
+    printf("VR = %.2f %.2f %.2f\n",R[1].V,R[2].V,R[3].V);
+
+    printf("IR = %.2f %.2f %.2f\n",R[1].I,R[2].I,R[3].I);
+
+    printf("VC = %.2f %.2f %.2f\n",C[1].V,C[2].V,C[3].V);
+
+    printf("IC = %.2f %.2f %.2f\n",C[1].I,C[2].I,C[3].I);
 
     return 0;
 
