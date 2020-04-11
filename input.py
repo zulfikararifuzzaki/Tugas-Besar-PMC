@@ -1,6 +1,15 @@
 from tkinter import *
 window = Tk() 
 window.geometry('900x900')
-button = Button(m, text='Stop', width=25, command=m.destroy) 
+picture = Canvas(window,width = 600,height = 600)
+picture.grid()
+filename = PhotoImage(file = "1.png")
+picture.create_image(300,300,anchor = CENTER,image = filename)
+button = Button(window, text='Stop', width=25, command=window.destroy) 
+button.grid() 
+mainloop()
+
+m = Tk()
+button = Button(window, text='Stop', width=25, command=m.destroy) 
 button.grid() 
 mainloop()
