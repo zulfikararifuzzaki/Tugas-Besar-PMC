@@ -20,9 +20,11 @@ struct tempBranch{
 
 void addRdata(struct Branch R[], struct tempBranch Rp,int last_R, float Is,float Vs,char R_str[]){
 
+   
     float Ip_temp = (R[last_R].value *Is)/(Rp.value+R[last_R].value);
     float Vp_temp = (Rp.value *Vs)/(Rp.value+R[last_R].value);
     
+   
     if (isExistBracket(R_str)){
 
         if (Rp.conn_type == 'S'){
@@ -78,7 +80,7 @@ void addRdata(struct Branch R[], struct tempBranch Rp,int last_R, float Is,float
 
 }
 
-void addCdata(struct Branch C[], struct tempBranch Cp,int last_C, float Is,float Vs,char C_str[]){
+void addCdata(struct Branch C[], struct tempBranch Cp,int last_C, double Is,float Vs,char C_str[]){
 
     float Ip_temp = (Cp.value *Is)/(Cp.value+C[last_C].value);
     float Vp_temp = (Cp.value *Vs)/(Cp.value+C[last_C].value);
@@ -86,7 +88,7 @@ void addCdata(struct Branch C[], struct tempBranch Cp,int last_C, float Is,float
     if (isExistBracket(C_str)){
 
         if (Cp.conn_type == 'S'){
-
+        
             C[Cp.key[0]].I = Ip_temp;
             C[Cp.key[1]].I = Ip_temp;
             C[last_C].I = Is - Ip_temp;
@@ -322,6 +324,89 @@ int getCEquivalent(struct Branch C[],char C_str[],struct tempBranch Cx,struct te
     return last_C;
 }
 
+void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI, char RorC, int cst, float tau, float Is, float Vs){
+    float t = 0;
+    if (VorI == 'V' && RorC =='R'){
+        
+        t = tau/(double)100;
+        // print t mendekati 0 agar grafik mulus
+        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,";");
+        double y = exp(-t/tau);
+        fprintf(*fptr,"%.2f\n",Vs-((R[cst].V)*y));
+        
+        while (t < 5*tau){
+            
+            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,";");
+            double y = exp(-t/tau);
+            fprintf(*fptr,"%.2f\n",Vs-((R[cst].V)*y));
+            t = t + tau/(double)5;
+
+        }
+    }
+
+    if (VorI == 'V' && RorC == 'C'){
+        
+        t = tau/(double)100;
+        // print t mendekati 0 agar grafik mulus
+        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,";");
+        double y = exp(-t/tau);
+        fprintf(*fptr,"%.2f\n",(C[cst].V - (C[cst].V)*y));
+        
+        while (t < 5*tau){
+            
+            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,";");
+            double y = exp(-t/tau);
+            fprintf(*fptr,"%.2f\n",(C[cst].V - (C[cst].V)*y));
+            t = t + tau/(double)5;
+
+        }
+    }
+
+    if (VorI == 'I' && RorC == 'R'){
+        
+        t = tau/(double)100;
+        // print t mendekati 0 agar grafik mulus
+        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,";");
+        double y = exp(-t/tau);
+        fprintf(*fptr,"%.2f\n",((R[cst].I)*y));
+        
+        while (t < 5*tau){
+            
+            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,";");
+            double y = exp(-t/tau);
+            fprintf(*fptr,"%.2f\n",((R[cst].I)*y));
+            t = t + tau/(double)5;
+
+        }
+    }
+
+    if (VorI == 'I' && RorC == 'C'){
+        
+        t = tau/(double)100;
+        // print t mendekati 0 agar grafik mulus
+        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,";");
+        double y = exp(-t/tau);
+        fprintf(*fptr,"%.2f\n",((C[cst].I)*y));
+        
+        while (t < 5*tau){
+            
+            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,";");
+            double y = exp(-t/tau);
+            fprintf(*fptr,"%.2f\n",((C[cst].I)*y));
+            t = t + tau/(double)5;
+
+        }
+    }
+}
+
 int main(){
 
     struct Branch R[5];
@@ -339,24 +424,28 @@ int main(){
     // Vs dalam satuan V
     float Vs = 30;
 
+    float a = 3;
+    float b = 2;
+  
     // Req dalam satuan Ohm
-    float Req = 60;
-
+    float Req = 60/(double)11;
+    
     // Ceq dalam satuan nF
     float Ceq = 10;
 
     // tau dalam satuan nanosecond
-    float tau = Req*Ceq;
+    double tau = Req*Ceq;
 
     // Is dalam satuan A
     float Is = Vs/Req;
+    
 
     // Masih Test awal, command seri dan paralel di hard code
     char R_str[50];
     strcpy(R_str,"R1 P R2 P R3");
 
     char C_str[50];
-    strcpy(C_str,"C1 S (C2 P C3)");
+    strcpy(C_str,"C1 P (C2 S C3)");
     
 
     /* Menyederhanakan rangkaian agar bisa dipecah (menghilangkan bracket dari string)
@@ -374,6 +463,43 @@ int main(){
     lastidx = getCEquivalent(C,C_str,Cp,&Co);
     addCdata(C,Co,lastidx,Is,Vs,C_str);
 
+    FILE * fptrVR1 = fopen("VR1.txt","w");
+    FILE * fptrVR2 = fopen("VR2.txt","w");
+    FILE * fptrVR3 = fopen("VR3.txt","w");
+    FILE * fptrIR1 = fopen("IR1.txt","w");
+    FILE * fptrIR2 = fopen("IR2.txt","w");
+    FILE * fptrIR3 = fopen("IR3.txt","w");
+    FILE * fptrVC1 = fopen("VC1.txt","w");
+    FILE * fptrVC2 = fopen("VC2.txt","w");
+    FILE * fptrVC3 = fopen("VC3.txt","w");
+    FILE * fptrIC1 = fopen("IC1.txt","w");
+    FILE * fptrIC2 = fopen("IC2.txt","w");
+    FILE * fptrIC3 = fopen("IC3.txt","w");
+    printToFileExt(&fptrVR1,R,C,'V','R',1,tau,Is,Vs);
+    printToFileExt(&fptrVR2,R,C,'V','R',2,tau,Is,Vs);
+    printToFileExt(&fptrVR3,R,C,'V','R',3,tau,Is,Vs);
+    printToFileExt(&fptrVC1,R,C,'V','C',1,tau,Is,Vs);
+    printToFileExt(&fptrVC2,R,C,'V','C',2,tau,Is,Vs);
+    printToFileExt(&fptrVC3,R,C,'V','C',3,tau,Is,Vs);
+    printToFileExt(&fptrIR1,R,C,'I','R',1,tau,Is,Vs);
+    printToFileExt(&fptrIR2,R,C,'I','R',2,tau,Is,Vs);
+    printToFileExt(&fptrIR3,R,C,'I','R',3,tau,Is,Vs);
+    printToFileExt(&fptrIC1,R,C,'I','C',1,tau,Is,Vs);
+    printToFileExt(&fptrIC2,R,C,'I','C',2,tau,Is,Vs);
+    printToFileExt(&fptrIC3,R,C,'I','C',3,tau,Is,Vs);
+    fclose(fptrVR1);
+    fclose(fptrVR2);
+    fclose(fptrVR3);
+    fclose(fptrVC1);
+    fclose(fptrVC2);
+    fclose(fptrVC3);
+    fclose(fptrIR1);
+    fclose(fptrIR2);
+    fclose(fptrIR3);
+    fclose(fptrIC1);
+    fclose(fptrIC2);
+    fclose(fptrIC3);
+    
     
     
     printf("VR = %.2f %.2f %.2f\n",R[1].V,R[2].V,R[3].V);
