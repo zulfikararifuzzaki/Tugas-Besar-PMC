@@ -105,12 +105,8 @@ def createEquiCircuit():
 
 def createCircuit():
     canvas.delete("all");
-    file = open("gambar_rangkaian.txt","r")
-    stream_res = file.readline();
-    stream_cap = file.readline();
-    file.close()
 
-    file = open("komponen_rangkaian.txt","r")
+    file = open("input_rangkaian.txt","r")
     V = file.readline();
     R = file.readline();
     C = file.readline();
@@ -144,28 +140,28 @@ def createCircuit():
     node7x_res = arr.array('i',[]);
     node7y_res = arr.array('i',[]);
 
-    if(stream_res == "R1-R2-R3\n") :
+    if(R[0] == "4") :
         node1x_res.append(160) #wiring
         node1y_res.append(200) #wiring
         node1x_res.append(260)
         node1y_res.append(200)
         node1x_res.append(360) #the end wiring
         node1y_res.append(200)
-    elif(stream_res == "R1|R2|R3\n") :
+    elif(R[0] == "7") :
         node1x_res.append(200)
         node1y_res.append(130)
         node1x_res.append(200) #wiring
         node1y_res.append(200) #wiring
         node1x_res.append(200)
         node1y_res.append(270)
-    elif(stream_res == "(R1-R2)|R3\n") :
+    elif(R[0] == "5") :
         node1x_res.append(200) #wiring
         node1y_res.append(200)
         node1x_res.append(300)#the end wiring
         node1y_res.append(200)
         node1x_res.append(250)
         node1y_res.append(130)
-    elif(stream_res == "(R1|R2)-R3\n") :
+    elif(R[0] == "6") :
         node1x_res.append(160) 
         node1y_res.append(130)
         node1x_res.append(160) #wiring
@@ -206,28 +202,28 @@ def createCircuit():
     node4x_cap = arr.array('i',[]);
     node4y_cap = arr.array('i',[]);
 
-    if(stream_cap == "C1-C2-C3") :
+    if(C[0] == "4") :
         node1x_cap.append(500)#WIRING
         node1y_cap.append(230)
         node1x_cap.append(500)
         node1y_cap.append(300)
         node1x_cap.append(500)#WIRING
         node1y_cap.append(370)
-    elif(stream_cap == "C1|C2|C3") :
+    elif(C[0] == "7") :
         node1x_cap.append(400)
         node1y_cap.append(300)
         node1x_cap.append(500)#WIRING
         node1y_cap.append(300)
         node1x_cap.append(600)
         node1y_cap.append(300)
-    elif (stream_cap=="(C1-C2)|C3"):
+    elif (C[0] == "5"):
         node1x_cap.append(500)
         node1y_cap.append(250)
         node1x_cap.append(500)
         node1y_cap.append(330)
         node1x_cap.append(600)
         node1y_cap.append(290)
-    elif(stream_cap=="(C1|C2)-C3"):
+    elif(C[0] == "6"):
         node1x_cap.append(500) #wiring
         node1y_cap.append(230)
         node1x_cap.append(600)
@@ -291,14 +287,14 @@ def createCircuit():
     canvas.create_window(init_x+node3x_cap[2]+20, init_y+node3y_cap[2]+20, window=cap_text3)
 
     # wiring
-    if(stream_res == "R1-R2-R3\n") :
+    if(R[0] == "4") :
         canvas.create_line(init_x+node1x_res[0]+dx, init_y+node1y_res[0]-dy, init_x+tengahx, init_y+node1y_res[0]-dy, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node1y_res[0]-dy,init_x+tengahx, init_y+node1y_vol, fill="black", width=2)
         canvas.create_line(init_x+node7x_res[0]-dx, init_y+node7y_res[0]-dy,init_x+node1x_res[1]+dx, init_y+node1y_res[1]-dy, fill="black", width=2)
         canvas.create_line(init_x+node7x_res[1]-dx, init_y+node7y_res[1]-dy,init_x+node1x_res[2]+dx, init_y+node1y_res[2]-dy, fill="black", width=2)
         last_nodex = node7x_res[2]-dx
         last_nodey = node7y_res[2]-dy
-    elif(stream_res == "R1|R2|R3\n") :
+    elif(R[0] == "7") :
         canvas.create_line(init_x+node1x_res[1]+dx, init_y+node1y_res[1]-dy, init_x+tengahx, init_y+node1y_res[1]-dy, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node1y_res[1]-dy,init_x+tengahx, init_y+node1y_vol, fill="black", width=2)
         canvas.create_line(init_x+node1x_res[0]+dx, init_y+node1y_res[0]-dy,init_x+node1x_res[0]+dx-70, init_y+node1y_res[0]-dy, fill="black", width=2)
@@ -309,7 +305,7 @@ def createCircuit():
         canvas.create_line(init_x+node7x_res[0]-dx+70, init_y+node7y_res[0]-dy,init_x+node7x_res[2]-dx+70, init_y+node7y_res[2]-dy, fill="black", width=2)
         last_nodex = node7x_res[1]-dx
         last_nodey = node7y_res[1]-dy
-    elif(stream_res == "(R1-R2)|R3\n") :
+    elif(R[0] == "5") :
         canvas.create_line(init_x+node1x_res[0]+dx, init_y+node1y_res[0]-dy, init_x+tengahx, init_y+node1y_res[0]-dy, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node1y_res[0]-dy,init_x+tengahx, init_y+node1y_vol, fill="black", width=2)
         canvas.create_line(init_x+node7x_res[0]-dx, init_y+node7y_res[0]-dy,init_x+node1x_res[1]+dx, init_y+node1y_res[1]-dy, fill="black", width=2)
@@ -320,7 +316,7 @@ def createCircuit():
         canvas.create_line(init_x+node7x_res[1]-dx+70, init_y+node7y_res[2]-dy,init_x+node7x_res[1]-dx+70, init_y+node7y_res[1]-dy, fill="black", width=2)
         last_nodex = node7x_res[1]-dx
         last_nodey = node7y_res[1]-dy
-    elif(stream_res == "(R1|R2)-R3\n") :
+    elif(R[0] == "6") :
         canvas.create_line(init_x+node1x_res[1]+dx, init_y+node1y_res[1]-dy, init_x+tengahx, init_y+node1y_res[1]-dy, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node1y_res[1]-dy,init_x+tengahx, init_y+node1y_vol, fill="black", width=2)
         canvas.create_line(init_x+node7x_res[1]-dx, init_y+node7y_res[1]-dy,init_x+node1x_res[2]+dx, init_y+node1y_res[2]-dy, fill="black", width=2)
@@ -330,7 +326,7 @@ def createCircuit():
         canvas.create_line(init_x+node7x_res[0]-dx+70, init_y+node7y_res[0]-dy,init_x+node7x_res[0]-dx+70, init_y+node7y_res[1]-dy, fill="black", width=2)
         last_nodex = node7x_res[2]-dx
         last_nodey = node7y_res[2]-dy
-    if(stream_cap == "C1-C2-C3") :
+    if(C[0] == "4") :
         dy_cap = node1y_cap[0]-last_nodey
         canvas.create_line(init_x+last_nodex, init_y+last_nodey, init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+last_nodey, fill="black", width=2)
         canvas.create_line(init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+last_nodey,init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+node1y_cap[0], fill="black", width=2)
@@ -339,7 +335,7 @@ def createCircuit():
         canvas.create_line(init_x+((node3x_cap[2]+node4x_cap[2])/2), init_y+node3y_cap[2],init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[2]+dy_cap, fill="black", width=2) #yang bawah
         canvas.create_line(init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[2]+dy_cap,init_x+tengahx, init_y+node3y_cap[2]+dy_cap, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node3y_cap[2]+dy_cap,init_x+tengahx, init_y+node2y_vol, fill="black", width=2)
-    elif(stream_cap == "C1|C2|C3") :
+    elif(C[0] == "7") :
         dy_cap = node1y_cap[1]-last_nodey
         canvas.create_line(init_x+last_nodex, init_y+last_nodey, init_x+((node1x_cap[1]+node2x_cap[1])/2), init_y+last_nodey, fill="black", width=2)
         canvas.create_line(init_x+((node1x_cap[1]+node2x_cap[1])/2), init_y+last_nodey,init_x+((node1x_cap[1]+node2x_cap[1])/2), init_y+node1y_cap[1], fill="black", width=2)
@@ -352,7 +348,7 @@ def createCircuit():
         canvas.create_line(init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[1],init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[1]+dy_cap, fill="black", width=2)
         canvas.create_line(init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[1]+dy_cap,init_x+tengahx, init_y+node3y_cap[1]+dy_cap, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node3y_cap[1]+dy_cap,init_x+tengahx, init_y+node2y_vol, fill="black", width=2)    
-    elif (stream_cap=="(C1-C2)|C3"):
+    elif (C[0] == "5"):
         dy_cap = node1y_cap[0]-last_nodey
         canvas.create_line(init_x+last_nodex, init_y+last_nodey, init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+last_nodey, fill="black", width=2)
         canvas.create_line(init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+last_nodey,init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+node1y_cap[0], fill="black", width=2)
@@ -364,7 +360,7 @@ def createCircuit():
         canvas.create_line(init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[1],init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[1]+dy_cap, fill="black", width=2)
         canvas.create_line(init_x+((node3x_cap[1]+node4x_cap[1])/2), init_y+node3y_cap[1]+dy_cap,init_x+tengahx, init_y+node3y_cap[1]+dy_cap, fill="black", width=2)
         canvas.create_line(init_x+tengahx, init_y+node3y_cap[1]+dy_cap,init_x+tengahx, init_y+node2y_vol, fill="black", width=2)
-    elif(stream_cap=="(C1|C2)-C3"):
+    elif(C[0] == "6"):
         dy_cap = node1y_cap[0]-last_nodey
         canvas.create_line(init_x+last_nodex, init_y+last_nodey, init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+last_nodey, fill="black", width=2)
         canvas.create_line(init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+last_nodey,init_x+((node1x_cap[0]+node2x_cap[0])/2), init_y+node1y_cap[0], fill="black", width=2)
