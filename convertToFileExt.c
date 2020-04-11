@@ -103,8 +103,8 @@ void addCdata(struct Branch C[], struct tempBranch Cp,int last_C, float Is,float
             C[Cp.key[1]].V = Vp_temp;
             C[last_C].V = Vs - Vp_temp;
 
-            C[Cp.key[0]].I = C[Cp.key[0]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value);
-            C[Cp.key[1]].I = C[Cp.key[1]].value*Vs/(C[Cp.key[0]].value + C[Cp.key[1]].value);
+            C[Cp.key[0]].I = C[Cp.key[0]].value*Is/(C[Cp.key[0]].value + C[Cp.key[1]].value);
+            C[Cp.key[1]].I = C[Cp.key[1]].value*Is/(C[Cp.key[0]].value + C[Cp.key[1]].value);
             C[last_C].I = Is;
 
         }   
@@ -265,7 +265,7 @@ int getCEquivalent(struct Branch C[],char C_str[],struct tempBranch Cx,struct te
                         Cx.isReq = 1;
                         Cx.key[x]= tmp1;
                         Cx.key[x+1] = tmp2;
-                        Cx.conn_type = 'S';
+                        Cx.conn_type = 'P';
                         val_tmp = val_tmp - C[tmp2].value;
                         
         
@@ -288,7 +288,7 @@ int getCEquivalent(struct Branch C[],char C_str[],struct tempBranch Cx,struct te
                         Cx.isReq = 1;
                         Cx.key[x]= tmp1;
                         Cx.key[x+1] = tmp2;
-                        Cx.conn_type = 'P';
+                        Cx.conn_type = 'S';
                         
                         
                     }
