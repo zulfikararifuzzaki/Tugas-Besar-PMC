@@ -1,10 +1,5 @@
 from tkinter import *
 
-def init_output():
-    c = 3
-
-
-
 
 def input_circuit():
     if (Rcode == 4):
