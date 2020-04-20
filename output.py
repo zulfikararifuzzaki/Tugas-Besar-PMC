@@ -106,7 +106,7 @@ def createEquiCircuit():
 def createCircuit():
     canvas.delete("all");
 
-    file = open("input_rangkaian.txt","r")
+    file = open("input_rangkaian_a.txt","r")
     V = file.readline();
     R = file.readline();
     C = file.readline();
