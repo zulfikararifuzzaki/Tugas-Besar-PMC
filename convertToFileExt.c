@@ -328,7 +328,7 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
     float t = 0;
     if (VorI == 'V' && RorC =='R'){
         
-        t = tau/(double)100;
+        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
         fprintf(*fptr,"%.2f",t);
         fprintf(*fptr,";");
@@ -341,14 +341,14 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
             fprintf(*fptr,";");
             double y = exp(-t/tau);
             fprintf(*fptr,"%.2f\n",Vs-((R[cst].V)*y));
-            t = t + tau/(double)5;
+            t = t + tau/(double)10;
 
         }
     }
 
     if (VorI == 'V' && RorC == 'C'){
         
-        t = tau/(double)100;
+        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
         fprintf(*fptr,"%.2f",t);
         fprintf(*fptr,";");
@@ -361,14 +361,14 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
             fprintf(*fptr,";");
             double y = exp(-t/tau);
             fprintf(*fptr,"%.2f\n",(C[cst].V - (C[cst].V)*y));
-            t = t + tau/(double)5;
+            t = t + tau/(double)10;
 
         }
     }
 
     if (VorI == 'I' && RorC == 'R'){
         
-        t = tau/(double)100;
+        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
         fprintf(*fptr,"%.2f",t);
         fprintf(*fptr,";");
@@ -381,14 +381,14 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
             fprintf(*fptr,";");
             double y = exp(-t/tau);
             fprintf(*fptr,"%.2f\n",((R[cst].I)*y));
-            t = t + tau/(double)5;
+            t = t + tau/(double)10;
 
         }
     }
 
     if (VorI == 'I' && RorC == 'C'){
         
-        t = tau/(double)100;
+        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
         fprintf(*fptr,"%.2f",t);
         fprintf(*fptr,";");
@@ -401,7 +401,7 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
             fprintf(*fptr,";");
             double y = exp(-t/tau);
             fprintf(*fptr,"%.2f\n",((C[cst].I)*y));
-            t = t + tau/(double)5;
+            t = t + tau/(double)10;
 
         }
     }
