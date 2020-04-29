@@ -69,7 +69,7 @@ float cariReq(char* input, char jenis){
 			strcpy(bentukR, "R1 S R2 S R3");}
 		else if(bentuk == 5){
 			output = paralel(X1, X2+X3);
-			strcpy(bentukR, "R1 P (R1 S R2)");}
+			strcpy(bentukR, "R1 P (R2 S R3)");}
 		else if(bentuk == 6){
 			output = paralel(X1, X2) + X3;
 			strcpy(bentukR, "(R1 P R2) S R3");}
