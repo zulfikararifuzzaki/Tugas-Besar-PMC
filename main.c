@@ -3,6 +3,14 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+typedef struct ekivalen
+{
+	float V;
+	float I;
+	float R;
+	float C;
+
+}ekivalen;
 
 struct Branch{
     float value;
@@ -404,53 +412,259 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
     }
 }
 
-int main(){
+float paralel (float X1, float X2){
+	return((float)X1*X2/(float)(X1+X2));}
 
-    struct Branch R[5];
-    struct Branch C[5];
+char bentukR[64];
+char bentukC[64];
+
+float cariReq(char* strinput, char jenis)
+{
+
+	// input berupa string dari file eksternal
+	// jenis berupa R atau C untuk resistor atau kapasitor
+	// keluaran R atau C ekivalen dari resistor
+	
+	char delim = ' ';
+	char* temp = (char*)malloc(sizeof(char)); strcpy(temp, "");
+	int bentuk;
+	float X1;
+	float X2;
+	float X3;
+	
+	int i =0;
+	int k = 0;
+	
+	float output;
+	
+	while(strinput[i] != '\0')
+	{
+		if(strinput[i] != delim){
+			strncat(temp, &strinput[i], 1);
+		}
+		else{
+			if(k==0){
+				bentuk = atoi(temp);}
+			else if (k==1){
+				X1 = atoi(temp);}
+			else if (k==2){
+				X2 = atoi(temp);}
+			else if (k==3){
+				X3 = atoi(temp);}
+			strcpy(temp, "");
+			++k;
+        }
+		++i;
+    }
+	X3 = atoi(temp);
+
+	if(jenis == 'R'){
+		if (bentuk == 1){
+			output = X1;
+			strcpy(bentukR, "R1");}
+		else if(bentuk == 2){
+			output = X1 + X2;
+			strcpy(bentukR, "R1 S R2");}
+		else if(bentuk == 3){
+			output = paralel(X1, X2);
+			strcpy(bentukR, "R1 P R2");}
+		else if(bentuk == 4){
+			output = X1 + X2 + X3;
+			strcpy(bentukR, "R1 S R2 S R3");}
+		else if(bentuk == 5){
+			output = paralel(X1, X2+X3);
+			strcpy(bentukR, "R1 P (R2 S R3)");}
+		else if(bentuk == 6){
+			output = paralel(X1, X2) + X3;
+			strcpy(bentukR, "(R1 P R2) S R3");}
+		else{
+			output = paralel(paralel(X1, X2), X3);
+			strcpy(bentukR, "R1 P R2 P R3");}
+		}
+	else
+	{
+		if (bentuk == 1){
+			output = X1;
+			strcpy(bentukC, "C1");}
+		else if (bentuk == 2){
+			output = paralel(X1, X2);
+			strcpy(bentukC, "C1 S C2");}
+		else if (bentuk == 3){
+			output = X1 + X2;
+			strcpy(bentukC, "C1 P C2");}
+		else if (bentuk == 4){
+			output = paralel(paralel(X1, X2), X3);
+			strcpy(bentukC, "C1 S C2 S C3");}
+		else if (bentuk == 5){
+			output = X1 + paralel(X2, X3);
+			strcpy(bentukC, "C1 P (C2 S C3)");}
+		else if (bentuk == 6){
+			output = paralel(X1+X2, X3);
+			strcpy(bentukC, "(C1 P C2) S C3");}
+		else{
+			output = X1 + X2 + X3;
+			strcpy(bentukC, "C1 P C2 P C3");}
+		}
+	return(output);
+}
+
+void cariNetList(char* filename,ekivalen input_dummy, ekivalen* output)
+{   
+    // menerima input nama file dalam bentuk string
+	// memproses untuk mengisis V, R, dan C
+	// output berupa V, R, dan C ekivalen
+	
+	FILE *stream;
+	
+	char* Vout = (char*)malloc(20*sizeof(char));
+	char* Rout = (char*)malloc(20*sizeof(char));
+	char* Cout = (char*)malloc(20*sizeof(char));
+	
+	stream = fopen(filename, "r");
+	
+	fgets(Vout, 40*sizeof(char), stream);
+	fgets(Rout, 40*sizeof(char), stream);
+	fgets(Cout, 40*sizeof(char), stream);
+
+	input_dummy.V = atoi(Vout);
+	input_dummy.R = cariReq(Rout, 'R');
+	input_dummy.C = cariReq(Cout, 'C');
+	input_dummy.I = input_dummy.V/(float)input_dummy.R;
+    *output = input_dummy;
+	fclose(stream);
+	
+}
+
+void getValueComponent(char* filename, struct Branch Rd[5],struct Branch Cd[5], struct Branch **Routput,struct Branch **Coutput){
+
+    // mencari stringinput
+    FILE *stream;
+	
+	char* Vout = (char*)malloc(20*sizeof(char));
+	char* Rout = (char*)malloc(20*sizeof(char));
+	char* Cout = (char*)malloc(20*sizeof(char));
+	
+	stream = fopen(filename, "r");
+	
+	fgets(Vout, 40*sizeof(char), stream);
+	fgets(Rout, 40*sizeof(char), stream);
+	fgets(Cout, 40*sizeof(char), stream);
+
+
+    // Memulai proses assign ke struct R
+	char delim = ' ';
+	char* temp = (char*)malloc(sizeof(char)); strcpy(temp, "");
+	int bentuk;
+    float X1,X2,X3;
+	int i =0;
+	int k = 0;
+	
+    while(Rout[i] != '\0')
+	{
+		if(Rout[i] != delim){
+			strncat(temp, &Rout[i], 1);
+		}
+		else{
+			if(k==0){
+				bentuk = atoi(temp);}
+			else if (k==1){
+				X1 = atoi(temp);
+                Rd[1].value = X1;}
+			else if (k==2){
+				X2 = atoi(temp);
+                Rd[2].value = X2;}
+			else if (k==3){
+				X3 = atoi(temp);}
+			strcpy(temp, "");
+			++k;
+        }
+		++i;
+    }
+	X3 = atoi(temp);
+    Rd[3].value = X3;
+
+    *Routput = Rd;
+
+    // Mengassign value ke struct C
+    i =0;
+	k = 0;
+	strcpy(temp, "");
+    while(Cout[i] != '\0')
+	{
+		if(Cout[i] != delim){
+			strncat(temp, &Cout[i], 1);
+		}
+		else{
+			if(k==0){
+				bentuk = atoi(temp);}
+			else if (k==1){
+				X1 = atoi(temp);
+                Cd[1].value = X1;}
+			else if (k==2){
+				X2 = atoi(temp);
+                Cd[2].value = X2;}
+			else if (k==3){
+				X3 = atoi(temp);}
+			strcpy(temp, "");
+			++k;
+        }
+		++i;
+    }
+	X3 = atoi(temp);
+    Cd[3].value = X3;
+
+    *Coutput = Cd;
+    fclose(stream);
+}
+char* getRString()
+{	
+    char* Routput = (char*)malloc(sizeof(char));
+	strcpy(Routput, "");
+	char S = 'S';
+	char space = ' ';
+	
+	strcat(Routput, bentukR);
+
+	
+	return(Routput);
+}
+
+char* getCString()
+{	
+    char* Coutput = (char*)malloc(sizeof(char));
+	strcpy(Coutput, "");
+	
+	strcat(Coutput, bentukC);
+	return(Coutput);
+}
+
+void executeAllProcess(){
+
+    ekivalen dummy; ekivalen dataEq;
+    char R_str[50], C_str[50];
+
+    // data data dari netlist diassign ke dataEq
+    cariNetList("contoh.txt",dummy,&dataEq);
+    strcpy(R_str,getRString());
+    strcpy(C_str,getCString());
+
+    // Inisialisasi variabel untuk mencari tegangan arus masing masing branch
+    struct Branch R_dummy[5],C_dummy[5], *R,*C;
     struct tempBranch Rp,Ro;
     struct tempBranch Cp,Co;
-    R[1].value = 30;
-    R[2].value = 5;
-    R[3].value = 10;
-    C[1].value = 8;
-    C[2].value = 3;
-    C[3].value = 6;
     int lastidx;
-    // Dua besaran Vs dan Is didapat dari proses simplifikasi RC (bagian zulfikar)
-    // Vs dalam satuan V
-    float Vs = 9;
-  
-    // Req dalam satuan Ohm
-    float Req = 10;
-    
-    // Ceq dalam satuan uF
-    float Ceq = 10;
-
-    // tau dalam satuan microsecond
+    float Vs = dataEq.V;
+    float Req = dataEq.R;
+    float Is = Vs/(float)Req;
+    float Ceq = dataEq.C;
     double tau = Req*Ceq;
 
-    // Is dalam satuan A
-    float Is = Vs/Req;
+    //assign value masing masing komponen ke struct Branch R dan C.
+    getValueComponent("contoh.txt",R_dummy,C_dummy,&R,&C);
     
 
-    // Masih Test awal, command seri dan paralel di hard code
-    char R_str[50];
-    strcpy(R_str,"R1 P (R2 S R3)");
-
-    char C_str[50];
-    strcpy(C_str,"C1 P (C2 S C3)");
-    
-
-    /* Menyederhanakan rangkaian agar bisa dipecah (menghilangkan bracket dari string)
-    
-        Struct Branch Rp akan berbentuk array yang berisi nilai nilai R (sudah disederhanakan) 
-        agar I bisa dipecah
-    */
-
-   
+    // Memulai proses memecah branch dan mencetak sample point grafik ke file eksternal
     lastidx = getREquivalent(R,R_str,Rp,&Ro);
-
     addRdata(R,Ro,lastidx,Is,Vs,R_str);
 
     lastidx = getCEquivalent(C,C_str,Cp,&Co);
@@ -492,18 +706,10 @@ int main(){
     fclose(fptrIC1);
     fclose(fptrIC2);
     fclose(fptrIC3);
+
+}
+int main(){
     
-    
-    
-    printf("VR = %.4f %.4f %.4f\n",R[1].V,R[2].V,R[3].V);
-
-    printf("IR = %.4f %.4f %.4f\n",R[1].I,R[2].I,R[3].I);
-
-    printf("VC = %.4f %.4f %.4f\n",C[1].V,C[2].V,C[3].V);
-
-    printf("IC = %.4f %.4f %.4f\n",C[1].I,C[2].I,C[3].I);
-
-    return 0;
-
-
+    executeAllProcess();
+	return(0);
 }
