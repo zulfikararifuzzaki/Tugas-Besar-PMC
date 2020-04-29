@@ -325,22 +325,21 @@ int getCEquivalent(struct Branch C[],char C_str[],struct tempBranch Cx,struct te
 }
 
 void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI, char RorC, int cst, float tau, float Is, float Vs){
-    float t = 0;
+    float t = 0.01;
     if (VorI == 'V' && RorC =='R'){
         
-        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
-        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,"%.4f",t);
         fprintf(*fptr,";");
         double y = exp(-t/tau);
-        fprintf(*fptr,"%.2f\n",Vs-((R[cst].V)*y));
-        
+        fprintf(*fptr,"%.4f\n",((R[cst].V)*y));
+        t = tau/(double)88;
         while (t < 5*tau){
             
-            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,"%.4f",t);
             fprintf(*fptr,";");
             double y = exp(-t/tau);
-            fprintf(*fptr,"%.2f\n",Vs-((R[cst].V)*y));
+            fprintf(*fptr,"%.4f\n",((R[cst].V)*y));
             t = t + tau/(double)10;
 
         }
@@ -348,19 +347,18 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
 
     if (VorI == 'V' && RorC == 'C'){
         
-        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
-        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,"%.4f",t);
         fprintf(*fptr,";");
         double y = exp(-t/tau);
-        fprintf(*fptr,"%.2f\n",(C[cst].V - (C[cst].V)*y));
-        
+        fprintf(*fptr,"%.4f\n",(C[cst].V - (C[cst].V)*y));
+        t = tau/(double)88;
         while (t < 5*tau){
             
-            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,"%.4f",t);
             fprintf(*fptr,";");
             double y = exp(-t/tau);
-            fprintf(*fptr,"%.2f\n",(C[cst].V - (C[cst].V)*y));
+            fprintf(*fptr,"%.4f\n",(C[cst].V - (C[cst].V)*y));
             t = t + tau/(double)10;
 
         }
@@ -368,19 +366,18 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
 
     if (VorI == 'I' && RorC == 'R'){
         
-        t = tau/(double)88;
         // print t mendekati 0 agar grafik mulus
-        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,"%.4f",t);
         fprintf(*fptr,";");
         double y = exp(-t/tau);
-        fprintf(*fptr,"%.2f\n",((R[cst].I)*y));
-        
+        fprintf(*fptr,"%.4f\n",((R[cst].I)*y));
+        t = tau/(double)88;
         while (t < 5*tau){
             
-            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,"%.4f",t);
             fprintf(*fptr,";");
             double y = exp(-t/tau);
-            fprintf(*fptr,"%.2f\n",((R[cst].I)*y));
+            fprintf(*fptr,"%.4f\n",((R[cst].I)*y));
             t = t + tau/(double)10;
 
         }
@@ -388,19 +385,19 @@ void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI,
 
     if (VorI == 'I' && RorC == 'C'){
         
-        t = tau/(double)88;
+        
         // print t mendekati 0 agar grafik mulus
-        fprintf(*fptr,"%.2f",t);
+        fprintf(*fptr,"%.4f",t);
         fprintf(*fptr,";");
         double y = exp(-t/tau);
-        fprintf(*fptr,"%.2f\n",((C[cst].I)*y));
-        
+        fprintf(*fptr,"%.4f\n",((C[cst].I)*y));
+        t = tau/(double)88;
         while (t < 5*tau){
             
-            fprintf(*fptr,"%.2f",t);
+            fprintf(*fptr,"%.4f",t);
             fprintf(*fptr,";");
             double y = exp(-t/tau);
-            fprintf(*fptr,"%.2f\n",((C[cst].I)*y));
+            fprintf(*fptr,"%.4f\n",((C[cst].I)*y));
             t = t + tau/(double)10;
 
         }
@@ -413,27 +410,24 @@ int main(){
     struct Branch C[5];
     struct tempBranch Rp,Ro;
     struct tempBranch Cp,Co;
-    R[1].value = 10;
-    R[2].value = 20;
-    R[3].value = 30;
-    C[1].value = 5;
-    C[2].value = 30;
+    R[1].value = 30;
+    R[2].value = 5;
+    R[3].value = 10;
+    C[1].value = 8;
+    C[2].value = 3;
     C[3].value = 6;
     int lastidx;
     // Dua besaran Vs dan Is didapat dari proses simplifikasi RC (bagian zulfikar)
     // Vs dalam satuan V
-    float Vs = 30;
-
-    float a = 3;
-    float b = 2;
+    float Vs = 9;
   
     // Req dalam satuan Ohm
-    float Req = 60/(double)11;
+    float Req = 10;
     
-    // Ceq dalam satuan nF
+    // Ceq dalam satuan uF
     float Ceq = 10;
 
-    // tau dalam satuan nanosecond
+    // tau dalam satuan microsecond
     double tau = Req*Ceq;
 
     // Is dalam satuan A
@@ -442,7 +436,7 @@ int main(){
 
     // Masih Test awal, command seri dan paralel di hard code
     char R_str[50];
-    strcpy(R_str,"R1 P R2 P R3");
+    strcpy(R_str,"R1 P (R2 S R3)");
 
     char C_str[50];
     strcpy(C_str,"C1 P (C2 S C3)");
@@ -452,7 +446,6 @@ int main(){
     
         Struct Branch Rp akan berbentuk array yang berisi nilai nilai R (sudah disederhanakan) 
         agar I bisa dipecah
-
     */
 
    
@@ -502,13 +495,13 @@ int main(){
     
     
     
-    printf("VR = %.2f %.2f %.2f\n",R[1].V,R[2].V,R[3].V);
+    printf("VR = %.4f %.4f %.4f\n",R[1].V,R[2].V,R[3].V);
 
-    printf("IR = %.2f %.2f %.2f\n",R[1].I,R[2].I,R[3].I);
+    printf("IR = %.4f %.4f %.4f\n",R[1].I,R[2].I,R[3].I);
 
-    printf("VC = %.2f %.2f %.2f\n",C[1].V,C[2].V,C[3].V);
+    printf("VC = %.4f %.4f %.4f\n",C[1].V,C[2].V,C[3].V);
 
-    printf("IC = %.2f %.2f %.2f\n",C[1].I,C[2].I,C[3].I);
+    printf("IC = %.4f %.4f %.4f\n",C[1].I,C[2].I,C[3].I);
 
     return 0;
 
