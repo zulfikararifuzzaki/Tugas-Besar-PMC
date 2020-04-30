@@ -335,7 +335,7 @@ int getCEquivalent(struct Branch C[],char C_str[],struct tempBranch Cx,struct te
 }
 
 void printToFileExt(FILE** fptr,struct Branch R[], struct Branch C[], char VorI, char RorC, int cst, float tau, float Is, float Vs){
-    float t = 0.01;
+    float t = 0.0001;
     if (VorI == 'V' && RorC =='R'){
         
         // print t mendekati 0 agar grafik mulus
@@ -420,7 +420,7 @@ float paralel (float X1, float X2){
 char bentukR[64];
 char bentukC[64];
 
-float cariReq(char* strinput, char jenis)
+float cariNilaiEq(char* strinput, char jenis)
 {
 
 	// input berupa string dari file eksternal
@@ -446,19 +446,19 @@ float cariReq(char* strinput, char jenis)
 		}
 		else{
 			if(k==0){
-				bentuk = atoi(temp);}
+				bentuk = atof(temp);}
 			else if (k==1){
-				X1 = atoi(temp);}
+				X1 = atof(temp);}
 			else if (k==2){
-				X2 = atoi(temp);}
+				X2 = atof(temp);}
 			else if (k==3){
-				X3 = atoi(temp);}
+				X3 = atof(temp);}
 			strcpy(temp, "");
 			++k;
         }
 		++i;
     }
-	X3 = atoi(temp);
+	X3 = atof(temp);
 
 	if(jenis == 'R'){
 		if (bentuk == 1){
@@ -518,19 +518,19 @@ void cariNetList(char* filename,ekivalen input_dummy, ekivalen* output)
 	
 	FILE *stream;
 	
-	char* Vout = (char*)malloc(20*sizeof(char));
-	char* Rout = (char*)malloc(20*sizeof(char));
-	char* Cout = (char*)malloc(20*sizeof(char));
+	char* Vout = (char*)malloc(50*sizeof(char));
+	char* Rout = (char*)malloc(50*sizeof(char));
+	char* Cout = (char*)malloc(50*sizeof(char));
 	
 	stream = fopen(filename, "r");
 	
-	fgets(Vout, 40*sizeof(char), stream);
-	fgets(Rout, 40*sizeof(char), stream);
-	fgets(Cout, 40*sizeof(char), stream);
+	fgets(Vout, 100*sizeof(char), stream);
+	fgets(Rout, 100*sizeof(char), stream);
+	fgets(Cout, 100*sizeof(char), stream);
 
-	input_dummy.V = atoi(Vout);
-	input_dummy.R = cariReq(Rout, 'R');
-	input_dummy.C = cariReq(Cout, 'C');
+	input_dummy.V = atof(Vout);
+	input_dummy.R = cariNilaiEq(Rout, 'R');
+	input_dummy.C = cariNilaiEq(Cout, 'C');
 	input_dummy.I = input_dummy.V/(float)input_dummy.R;
     *output = input_dummy;
 	fclose(stream);
@@ -542,15 +542,15 @@ void getValueComponent(char* filename, struct Branch Rd[5],struct Branch Cd[5], 
     // mencari stringinput
     FILE *stream;
 	
-	char* Vout = (char*)malloc(20*sizeof(char));
-	char* Rout = (char*)malloc(20*sizeof(char));
-	char* Cout = (char*)malloc(20*sizeof(char));
+	char* Vout = (char*)malloc(50*sizeof(char));
+	char* Rout = (char*)malloc(50*sizeof(char));
+	char* Cout = (char*)malloc(50*sizeof(char));
 	
 	stream = fopen(filename, "r");
 	
-	fgets(Vout, 40*sizeof(char), stream);
-	fgets(Rout, 40*sizeof(char), stream);
-	fgets(Cout, 40*sizeof(char), stream);
+	fgets(Vout, 100*sizeof(char), stream);
+	fgets(Rout, 100*sizeof(char), stream);
+	fgets(Cout, 100*sizeof(char), stream);
 
 
     // Memulai proses assign ke struct R
@@ -568,21 +568,21 @@ void getValueComponent(char* filename, struct Branch Rd[5],struct Branch Cd[5], 
 		}
 		else{
 			if(k==0){
-				bentuk = atoi(temp);}
+				bentuk = atof(temp);}
 			else if (k==1){
-				X1 = atoi(temp);
+				X1 = atof(temp);
                 Rd[1].value = X1;}
 			else if (k==2){
-				X2 = atoi(temp);
+				X2 = atof(temp);
                 Rd[2].value = X2;}
 			else if (k==3){
-				X3 = atoi(temp);}
+				X3 = atof(temp);}
 			strcpy(temp, "");
 			++k;
         }
 		++i;
     }
-	X3 = atoi(temp);
+	X3 = atof(temp);
     Rd[3].value = X3;
 
     *Routput = Rd;
@@ -598,46 +598,41 @@ void getValueComponent(char* filename, struct Branch Rd[5],struct Branch Cd[5], 
 		}
 		else{
 			if(k==0){
-				bentuk = atoi(temp);}
+				bentuk = atof(temp);}
 			else if (k==1){
-				X1 = atoi(temp);
+				X1 = atof(temp);
                 Cd[1].value = X1;}
 			else if (k==2){
-				X2 = atoi(temp);
+				X2 = atof(temp);
                 Cd[2].value = X2;}
 			else if (k==3){
-				X3 = atoi(temp);}
+				X3 = atof(temp);}
 			strcpy(temp, "");
 			++k;
         }
 		++i;
     }
-	X3 = atoi(temp);
-    Cd[3].value = X3;
+	X3 = atof(temp);
+    Cd[3].value = (float)X3;
 
     *Coutput = Cd;
     fclose(stream);
 }
-char* getRString()
+
+char* getString()
 {	
-    char* Routput = (char*)malloc(sizeof(char));
-	strcpy(Routput, "");
+    char* output = (char*)malloc(sizeof(char));
+	strcpy(output, "");
 	char S = 'S';
 	char space = ' ';
 	
-	strcat(Routput, bentukR);
+	strcat(output, bentukR);
+	strncat(output, &space, 1);
+	strncat(output, &S, 1);
+	strncat(output, &space, 1);
+	strcat(output, bentukC);
+	return(output);
 
-	
-	return(Routput);
-}
-
-char* getCString()
-{	
-    char* Coutput = (char*)malloc(sizeof(char));
-	strcpy(Coutput, "");
-	
-	strcat(Coutput, bentukC);
-	return(Coutput);
 }
 
 void executeAllProcess(){
@@ -647,19 +642,20 @@ void executeAllProcess(){
 
     // data data dari netlist diassign ke dataEq
     cariNetList("contoh.txt",dummy,&dataEq);
-    strcpy(R_str,getRString());
-    strcpy(C_str,getCString());
+    strcpy(R_str,bentukR);
+    strcpy(C_str,bentukC);
 
     // Inisialisasi variabel untuk mencari tegangan arus masing masing branch
     struct Branch R_dummy[5],C_dummy[5], *R,*C;
     struct tempBranch Rp,Ro;
     struct tempBranch Cp,Co;
     int lastidx;
-    float Vs = dataEq.V;
-    float Req = dataEq.R;
-    float Is = Vs/(float)Req;
-    float Ceq = dataEq.C;
-    double tau = Req*Ceq;
+    
+    float Vs = dataEq.V;                // Volt
+    float Req = (float)dataEq.R;        // K Ohm
+    float Is = Vs/(float)Req;           // mA
+    float Ceq = (float)dataEq.C;        // uF
+    double tau = (double)Req*Ceq;       // millisecond
 
     //assign value masing masing komponen ke struct Branch R dan C.
     getValueComponent("input_rangkaian_b.txt",R_dummy,C_dummy,&R,&C);
@@ -672,6 +668,13 @@ void executeAllProcess(){
     lastidx = getCEquivalent(C,C_str,Cp,&Co);
     addCdata(C,Co,lastidx,Is,Vs,C_str);
 
+    printf("VR = %.4f %.4f %.4f\n",R[1].V,R[2].V,R[3].V);
+
+    printf("IR = %.4f %.4f %.4f\n",R[1].I,R[2].I,R[3].I);
+
+    printf("VC = %.4f %.4f %.4f\n",C[1].V,C[2].V,C[3].V);
+
+    printf("IC = %.4f %.4f %.4f\n",C[1].I,C[2].I,C[3].I);
     FILE * fptrVR1 = fopen("VR1.txt","w");
     FILE * fptrVR2 = fopen("VR2.txt","w");
     FILE * fptrVR3 = fopen("VR3.txt","w");
@@ -711,7 +714,8 @@ void executeAllProcess(){
 
 }
 int main(){
-    
+
     executeAllProcess();
 	return(0);
+    
 }
