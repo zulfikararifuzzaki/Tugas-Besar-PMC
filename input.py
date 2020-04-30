@@ -2,7 +2,7 @@ from tkinter import *
 from output import *
 from ctypes import *
 
-#func_lib = CDLL(r"D:\Tugas-Besar-PMC-Output-input-combine\funlib.so")
+func_lib = CDLL(r"D:\Tugas-Besar-PMC-Output-input-combine\funlib.so")
 
 def input_circuit():
     if (Rcode == 4):
@@ -132,7 +132,7 @@ def submit(Rc,Cc,CircuitCode):
     else:
         file.write(str(Cc)+" "+c1+" "+c2+" "+c3)
     file.close()
-    #func_lib.executeAllProcess()
+    func_lib.executeAllProcess()
     #frame2.destroy();
     exemainloop();
 
