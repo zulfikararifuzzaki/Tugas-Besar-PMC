@@ -1,9 +1,6 @@
 from tkinter import *
 from output import *
 
-
-
-
 def input_circuit():
     if (Rcode == 4):
         if(Ccode == 4):
@@ -58,8 +55,10 @@ def input_circuit():
             circuit_code = 16
             RC_picFile = RC_picFile16
     frame1.destroy()
+    
     C_button4 = Button(root, text='Submit', width=25, command=lambda :submit(Rcode,Ccode,circuit_code)) 
     C_button4.grid(column = 0,row = 4)
+    
     RC_pic = Canvas(root,width = 800,height = 400)
     RC_pic.grid(column = 0, row = 0)
     RC_pic.create_image(10,10,anchor = NW,image = RC_picFile)
@@ -124,7 +123,8 @@ def submit(Rc,Cc,CircuitCode):
     else:
         file.write(str(Cc)+" "+c1+" "+c2+" "+c3)
     file.close()
-    exemainloop()
+    #frame2.destroy();
+    exemainloop();
 
 
 
