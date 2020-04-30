@@ -8,7 +8,7 @@ from matplotlib import style
 def createEquiCircuit(canvas,screen):
     canvas.delete("all");
 
-    file = open("komponen_rangkaian_equivalen.txt","r")
+    file = open("VEq.txt","r")
     V = file.readline();
     R = file.readline();
     C = file.readline();
@@ -374,50 +374,15 @@ def createCircuit(canvas,screen):
         canvas.create_line(init_x+tengahx, init_y+node3y_cap[2]+dy_cap,init_x+tengahx, init_y+node2y_vol, fill="black", width=2)
     return;
 
-def generateEquiGraph() :
-    plt.close("all");
-    #creating an array with 'd' as double float
-    time1 = arr.array('d',[]); #array for time
-    value1 = arr.array('d',[]); #array for voltage/current
-    time2 = arr.array('d',[]); #array for time
-    value2 = arr.array('d',[]); #array for voltage/current
-    #reading file
 
-    filename = "rangkaian_RC_test.csv";
-    file = open(filename,'r');
-
-    #reading entire line in file eksternal
-    with open(filename,'r') as filehandle:
-        for line in filehandle:
-            #cek = re.split(" |\n",line); #splitting the line with the deliminator " " or "\n"
-            token = re.split(";",line); #splitting the line with the deliminator ";"
-            time1.append(float(token[0]));
-            value1.append(float(token[1]));
-            time2.append(float(token[2]));
-            value2.append(float(token[3]));
-    file.close();
-
-    #displaying the graphic
-    style.use('ggplot')
-
-    fig,(ax1,ax2) = plt.subplots(2)
-    ax1.scatter(time1, value1)#time vs voltage
-    ax2.scatter(time2, value2)#time vs current
-    fig.suptitle('Grafik Tegangan dan Arus pada Rangkaian Ekuivalen');
-    ax1.set(xlabel = "time(s)",ylabel = "voltage(V)");
-    ax2.set(xlabel = "time(s)",ylabel = "current(A)");
-    plt.show()
-
-    return;
-
-def generateGraph (user_input):
+def generateGraph (filename):
     plt.close("all");
     #creating an array with 'd' as double float
     time = arr.array('d',[]); #array for time
     value = arr.array('d',[]); #array for voltage/current
 
     #reading file
-    filename = "rangkaian_RC.csv";
+    filename = filename+".txt";
     file = open(filename,'r');
 
     #reading entire line in file eksternal
@@ -429,6 +394,7 @@ def generateGraph (user_input):
             value.append(float(token[1]));
     file.close();
 
+    user_input=filename[0]
     #displaying the graphic
     style.use('ggplot')
     plt.scatter(time, value)#, align='center'
@@ -443,6 +409,7 @@ def generateGraph (user_input):
     plt.show()
 
     return;
+
 #------------------------------------------------------------------------------------------
 
 
@@ -453,18 +420,24 @@ def exemainloop():
 
     canvas = Canvas(screen, width=1500, height=600)
     canvas.pack();
+
+    file = open("input_rangkaian_a.txt","r")
+    filename = file.readline();
+    filename = file.readline();
+    filename = file.readline();
+    filename = file.readline();
+    file.close()
     
     def quit() :
         screen.destroy();
     b1 = Button(screen, text = "Show Equivalent Circuit",width=30,command=lambda :createEquiCircuit(canvas,screen))
     b2 = Button(screen, text = "Show Circuit",width=30,command=lambda : createCircuit(canvas,screen))
-    b3 = Button(screen, text = "Generate Equivalent Graphic",width=30,command=generateEquiGraph)
-    b4 = Button(screen, text = "Generate Graphic",width=30,command=lambda : generateGraph("V"))#gk bisa letakkan parameter sebagai command
+    b3 = Button(screen, text = "Generate Graphic",width=30,command=lambda :  generateGraph(filename))
+   #gk bisa letakkan parameter sebagai command
     b_quit = Button(screen, text = "Quit",width=30,command=quit)
     b1.place(relx = 0.1, rely = 0.1, anchor = CENTER)
     b2.place(relx = 0.1, rely = 0.15, anchor = CENTER)
     b3.place(relx = 0.1, rely = 0.2, anchor = CENTER)
-    b4.place(relx = 0.1, rely = 0.25, anchor = CENTER)
     b_quit.place(relx = 0.1, rely = 0.3, anchor = CENTER)
     mainloop()
 
