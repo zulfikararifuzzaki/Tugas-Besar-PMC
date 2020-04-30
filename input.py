@@ -1,4 +1,7 @@
 from tkinter import *
+from output import *
+
+
 
 
 def input_circuit():
@@ -121,7 +124,7 @@ def submit(Rc,Cc,CircuitCode):
     else:
         file.write(str(Cc)+" "+c1+" "+c2+" "+c3)
     file.close()
-    root.destroy()
+    exemainloop()
 
 
 
@@ -229,3 +232,5 @@ button = Button(frame1, text='Next', width=25, command=input_circuit)
 button.grid() 
 root.grid_columnconfigure((0, 1), weight=100)
 mainloop()
+
+
