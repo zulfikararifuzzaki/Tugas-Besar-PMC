@@ -641,7 +641,7 @@ void executeAllProcess(){
     char R_str[50], C_str[50];
 
     // data data dari netlist diassign ke dataEq
-    cariNetList("contoh.txt",dummy,&dataEq);
+    cariNetList("input_rangkaian_b.txt",dummy,&dataEq);
     strcpy(R_str,bentukR);
     strcpy(C_str,bentukC);
 
