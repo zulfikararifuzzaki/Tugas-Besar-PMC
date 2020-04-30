@@ -658,7 +658,7 @@ void executeAllProcess(){
     double tau = (double)Req*Ceq;       // millisecond
 
     //assign value masing masing komponen ke struct Branch R dan C.
-    getValueComponent("contoh.txt",R_dummy,C_dummy,&R,&C);
+    getValueComponent("input_rangkaian_b.txt",R_dummy,C_dummy,&R,&C);
 
     // Memulai proses memecah branch dan mencetak sample point grafik ke file eksternal
     lastidx = getREquivalent(R,R_str,Rp,&Ro);
