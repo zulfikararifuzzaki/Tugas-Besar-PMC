@@ -95,6 +95,10 @@ def input_circuit():
     c3_label.grid(column = 1,row = 13)
     c3_entry = Entry(root,textvariable = c3_var)
     c3_entry.grid(column = 1, row = 14)
+    user_label = Label(root, text = "Pilihan Komponen yang ingin Dianalisis")
+    user_label.grid(column = 1,row = 15)
+    user_entry = Entry(root,textvariable = user_var)
+    user_entry.grid(column = 1, row = 16)
 
 def submit(Rc,Cc,CircuitCode):
     v = v_var.get()
@@ -104,6 +108,7 @@ def submit(Rc,Cc,CircuitCode):
     c1 = c1_var.get()
     c2 = c2_var.get()
     c3 = c3_var.get()
+    user_in = user_var.get()
     print(v)
     print(Rc)
     print(str(Rc))
@@ -111,7 +116,8 @@ def submit(Rc,Cc,CircuitCode):
     file = open('input_rangkaian_a.txt','w')
     file.write(v+"\n")
     file.write(str(Rc)+" "+r1+" "+r2+" "+r3+"\n")
-    file.write(str(Cc)+" "+c1+" "+c2+" "+c3)
+    file.write(str(Cc)+" "+c1+" "+c2+" "+c3+"\n")
+    file.write(user_in)
     file.close()
     file = open('input_rangkaian_b.txt','w')
     file.write(v+"\n")
@@ -174,6 +180,7 @@ r3_var = StringVar()
 c1_var = StringVar()
 c2_var = StringVar()
 c3_var = StringVar()
+user_var = StringVar()
 
 Rcode = 4
 Ccode = 4 
