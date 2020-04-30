@@ -26,6 +26,15 @@ struct tempBranch{
     char conn_type;
 };
 
+int isExistBracket(char str[]){
+    for(int i = 0; i<strlen(str);++i){
+        if(str[i] =='('){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void addRdata(struct Branch R[], struct tempBranch Rp,int last_R, float Is,float Vs,char R_str[]){
 
    
@@ -148,14 +157,7 @@ void addCdata(struct Branch C[], struct tempBranch Cp,int last_C, double Is,floa
 
 }
 
-int isExistBracket(char str[]){
-    for(int i = 0; i<strlen(str);++i){
-        if(str[i] =='('){
-            return 1;
-        }
-    }
-    return 0;
-}
+
 int getREquivalent(struct Branch R[],char R_str[],struct tempBranch Rx,struct tempBranch *Ro){
     int last_R;
     float val_tmp;
@@ -639,7 +641,7 @@ void executeAllProcess(){
     char R_str[50], C_str[50];
 
     // data data dari netlist diassign ke dataEq
-    cariNetList("contoh.txt",dummy,&dataEq);
+    cariNetList("input_rangkaian_b.txt",dummy,&dataEq);
     strcpy(R_str,bentukR);
     strcpy(C_str,bentukC);
 
@@ -656,7 +658,7 @@ void executeAllProcess(){
     double tau = (double)Req*Ceq;       // millisecond
 
     //assign value masing masing komponen ke struct Branch R dan C.
-    getValueComponent("contoh.txt",R_dummy,C_dummy,&R,&C);
+    getValueComponent("input_rangkaian_b.txt",R_dummy,C_dummy,&R,&C);
 
     // Memulai proses memecah branch dan mencetak sample point grafik ke file eksternal
     lastidx = getREquivalent(R,R_str,Rp,&Ro);
