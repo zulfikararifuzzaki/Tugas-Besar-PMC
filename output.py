@@ -5,10 +5,10 @@ from matplotlib import pyplot as plt
 from matplotlib import style
 
 
-def createEquiCircuit(canvas,screen):
+def createEquiCircuit():
     canvas.delete("all");
 
-    file = open("VEq.txt","r")
+    file = open("komponen_rangkaian_equivalen.txt","r")
     V = file.readline();
     R = file.readline();
     C = file.readline();
@@ -103,10 +103,10 @@ def createEquiCircuit(canvas,screen):
 
 #---------------------- Another def -------------------------------------------------------------------------------
 
-def createCircuit(canvas,screen):
+def createCircuit():
     canvas.delete("all");
 
-    file = open("input_rangkaian_a.txt","r")
+    file = open("input_rangkaian.txt","r")
     V = file.readline();
     R = file.readline();
     C = file.readline();
@@ -256,13 +256,13 @@ def createCircuit(canvas,screen):
 
     #labeling
     #resistor label
-    res_text1 = Label(screen,text="R1 = "+R[1]+" ohm", font=("arial",10))
+    res_text1 = Label(screen,text="R1 = "+R[0]+" ohm", font=("arial",10))
     res_text1.place(x=init_x+node3x_res[0]+10,y=init_y+node2y_res[0]-10) #x node pertama resistor, y node atas
     canvas.create_window(init_x+node3x_res[0]+10, init_y+node2y_res[0]-10, window=res_text1)
-    res_text2 = Label(screen,text="R2 = "+R[2]+" ohm", font=("arial",10))
+    res_text2 = Label(screen,text="R2 = "+R[1]+" ohm", font=("arial",10))
     res_text2.place(x=init_x+node3x_res[1]+10,y=init_y+node2y_res[1]-10) #x node pertama resistor, y node atas
     canvas.create_window(init_x+node3x_res[1]+10, init_y+node2y_res[1]-10, window=res_text2)
-    res_text3 = Label(screen,text="R3 = "+R[3]+" ohm", font=("arial",10))
+    res_text3 = Label(screen,text="R3 = "+R[2]+" ohm", font=("arial",10))
     res_text3.place(x=init_x+node3x_res[2]+10,y=init_y+node2y_res[2]-10) #x node pertama resistor, y node atas
     canvas.create_window(init_x+node3x_res[2]+10, init_y+node2y_res[2]-10, window=res_text3)
     #voltage label
@@ -276,13 +276,13 @@ def createCircuit(canvas,screen):
     vol_text.place(x=init_x+node2x_vol+40,y=init_y+tengahy)
     canvas.create_window(init_x+node2x_vol+40, init_y+tengahy, window=vol_text)
     #capasaitor label
-    cap_text1 = Label(screen,text="C1 = "+C[1]+" F", font=("arial",10))
+    cap_text1 = Label(screen,text="C1 = "+C[0]+" F", font=("arial",10))
     cap_text1.place(x=init_x+node3x_cap[0]+20,y=init_y+node3y_cap[0]+20)
     canvas.create_window(init_x+node3x_cap[0]+20, init_y+node3y_cap[0]+20, window=cap_text1)
-    cap_text2 = Label(screen,text="C2 = "+C[2]+" F", font=("arial",10))
+    cap_text2 = Label(screen,text="C2 = "+C[1]+" F", font=("arial",10))
     cap_text2.place(x=init_x+node3x_cap[1]+20,y=init_y+node3y_cap[1]+20)
     canvas.create_window(init_x+node3x_cap[1]+20, init_y+node3y_cap[1]+20, window=cap_text2)
-    cap_text3 = Label(screen,text="C3 = "+C[3]+" F", font=("arial",10))
+    cap_text3 = Label(screen,text="C3 = "+C[2]+" F", font=("arial",10))
     cap_text3.place(x=init_x+node3x_cap[2]+20,y=init_y+node3y_cap[2]+20)
     canvas.create_window(init_x+node3x_cap[2]+20, init_y+node3y_cap[2]+20, window=cap_text3)
 
@@ -374,15 +374,50 @@ def createCircuit(canvas,screen):
         canvas.create_line(init_x+tengahx, init_y+node3y_cap[2]+dy_cap,init_x+tengahx, init_y+node2y_vol, fill="black", width=2)
     return;
 
+def generateEquiGraph() :
+    plt.close("all");
+    #creating an array with 'd' as double float
+    time1 = arr.array('d',[]); #array for time
+    value1 = arr.array('d',[]); #array for voltage/current
+    time2 = arr.array('d',[]); #array for time
+    value2 = arr.array('d',[]); #array for voltage/current
+    #reading file
 
-def generateGraph (filename):
+    filename = "rangkaian_RC_test.csv";
+    file = open(filename,'r');
+
+    #reading entire line in file eksternal
+    with open(filename,'r') as filehandle:
+        for line in filehandle:
+            #cek = re.split(" |\n",line); #splitting the line with the deliminator " " or "\n"
+            token = re.split(";",line); #splitting the line with the deliminator ";"
+            time1.append(float(token[0]));
+            value1.append(float(token[1]));
+            time2.append(float(token[2]));
+            value2.append(float(token[3]));
+    file.close();
+
+    #displaying the graphic
+    style.use('ggplot')
+
+    fig,(ax1,ax2) = plt.subplots(2)
+    ax1.scatter(time1, value1)#time vs voltage
+    ax2.scatter(time2, value2)#time vs current
+    fig.suptitle('Grafik Tegangan dan Arus pada Rangkaian Ekuivalen');
+    ax1.set(xlabel = "time(s)",ylabel = "voltage(V)");
+    ax2.set(xlabel = "time(s)",ylabel = "current(A)");
+    plt.show()
+
+    return;
+
+def generateGraph (user_input):
     plt.close("all");
     #creating an array with 'd' as double float
     time = arr.array('d',[]); #array for time
     value = arr.array('d',[]); #array for voltage/current
 
     #reading file
-    filename = filename+".txt";
+    filename = "tes.txt";
     file = open(filename,'r');
 
     #reading entire line in file eksternal
@@ -394,7 +429,6 @@ def generateGraph (filename):
             value.append(float(token[1]));
     file.close();
 
-    user_input=filename[0]
     #displaying the graphic
     style.use('ggplot')
     plt.scatter(time, value)#, align='center'
@@ -409,35 +443,24 @@ def generateGraph (filename):
     plt.show()
 
     return;
-
 #------------------------------------------------------------------------------------------
 
+screen = Tk();
+#screen.geometry('900x900')
+screen.title("Gambar Rangkaian");
 
-def exemainloop():
-    screen = Tk();
-    #screen.geometry('900x900')
-    screen.title("Gambar Rangkaian");
-
-    canvas = Canvas(screen, width=1500, height=600)
-    canvas.pack();
-
-    file = open("input_rangkaian_a.txt","r")
-    filename = file.readline();
-    filename = file.readline();
-    filename = file.readline();
-    filename = file.readline();
-    file.close()
-    
-    def quit() :
-        screen.destroy();
-    b1 = Button(screen, text = "Show Equivalent Circuit",width=30,command=lambda :createEquiCircuit(canvas,screen))
-    b2 = Button(screen, text = "Show Circuit",width=30,command=lambda : createCircuit(canvas,screen))
-    b3 = Button(screen, text = "Generate Graphic",width=30,command=lambda :  generateGraph(filename))
-   #gk bisa letakkan parameter sebagai command
-    b_quit = Button(screen, text = "Quit",width=30,command=quit)
-    b1.place(relx = 0.1, rely = 0.1, anchor = CENTER)
-    b2.place(relx = 0.1, rely = 0.15, anchor = CENTER)
-    b3.place(relx = 0.1, rely = 0.2, anchor = CENTER)
-    b_quit.place(relx = 0.1, rely = 0.3, anchor = CENTER)
-    mainloop()
-
+canvas = Canvas(screen, width=1500, height=600);
+canvas.pack()
+def quit() :
+    screen.destroy();
+b1 = Button(screen, text = "Show Equivalent Circuit",width=30,command=createEquiCircuit)
+b2 = Button(screen, text = "Show Circuit",width=30,command=createCircuit)
+b3 = Button(screen, text = "Generate Equivalent Graphic",width=30,command=generateEquiGraph)
+b4 = Button(screen, text = "Generate Graphic",width=30,command=lambda : generateGraph("V"))#gk bisa letakkan parameter sebagai command
+b_quit = Button(screen, text = "Quit",width=30,command=quit)
+b1.place(relx = 0.1, rely = 0.1, anchor = CENTER)
+b2.place(relx = 0.1, rely = 0.15, anchor = CENTER)
+b3.place(relx = 0.1, rely = 0.2, anchor = CENTER)
+b4.place(relx = 0.1, rely = 0.25, anchor = CENTER)
+b_quit.place(relx = 0.1, rely = 0.3, anchor = CENTER)
+mainloop()
