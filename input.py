@@ -2,7 +2,7 @@ from tkinter import *
 from output import *
 from ctypes import *
 
-func_lib = CDLL(r"D:\Tugas-Besar-PMC-Output-input-combine\funlib.so")
+#func_lib = CDLL(r"D:\Tugas-Besar-PMC-Output-input-combine\funlib.so")
 
 def input_circuit():
     if (Rcode == 4):
@@ -65,33 +65,33 @@ def input_circuit():
     RC_pic = Canvas(root,width = 800,height = 400)
     RC_pic.grid(column = 0, row = 0)
     RC_pic.create_image(10,10,anchor = NW,image = RC_picFile)
-    in_label = Label(root, text = "Masukkan Nilai Komponen-komponen\nsatuan R = Ohm dan C = nanoFarad",)
+    in_label = Label(root, text = "Masukkan Nilai Komponen-komponen\nsatuan R = KOhm dan C = mikroFarad",)
     in_label.grid(column = 1,row = 0)
-    v_label = Label(root, text = "V")
+    v_label = Label(root, text = "V(V)")
     v_label.grid(column = 1,row = 1)
     v_entry = Entry(root,textvariable = v_var)
     v_entry.grid(column = 1, row = 2)
-    r1_label = Label(root, text = "R1")
+    r1_label = Label(root, text = "R1 (Kohm)")
     r1_label.grid(column = 1,row = 3)
     r1_entry = Entry(root,textvariable = r1_var)
     r1_entry.grid(column = 1, row = 4)
-    r2_label = Label(root, text = "R2")
+    r2_label = Label(root, text = "R2 (Kohm)")
     r2_label.grid(column = 1,row = 5)
     r2_entry = Entry(root,textvariable = r2_var)
     r2_entry.grid(column = 1, row = 6)
-    r3_label = Label(root, text = "R3")
+    r3_label = Label(root, text = "R3 (Kohm)")
     r3_label.grid(column = 1,row = 7)
     r3_entry = Entry(root,textvariable = r3_var)
     r3_entry.grid(column = 1, row = 8)
-    c1_label = Label(root, text = "C1")
+    c1_label = Label(root, text = "C1 (mikroFarad)")
     c1_label.grid(column = 1,row = 9)
     c1_entry = Entry(root,textvariable = c1_var)
     c1_entry.grid(column = 1, row = 10)
-    c2_label = Label(root, text = "C2")
+    c2_label = Label(root, text = "C2 (mikroFarad)")
     c2_label.grid(column = 1,row = 11)
     c2_entry = Entry(root,textvariable = c2_var)
     c2_entry.grid(column = 1, row = 12)
-    c3_label = Label(root, text = "C3")
+    c3_label = Label(root, text = "C3 (mikroFarad)")
     c3_label.grid(column = 1,row = 13)
     c3_entry = Entry(root,textvariable = c3_var)
     c3_entry.grid(column = 1, row = 14)
@@ -132,7 +132,7 @@ def submit(Rc,Cc,CircuitCode):
     else:
         file.write(str(Cc)+" "+c1+" "+c2+" "+c3)
     file.close()
-    func_lib.executeAllProcess()
+    #func_lib.executeAllProcess()
     #frame2.destroy();
     exemainloop();
 
