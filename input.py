@@ -243,5 +243,3 @@ button = Button(frame1, text='Next', width=25, command=input_circuit)
 button.grid() 
 root.grid_columnconfigure((0, 1), weight=100)
 mainloop()
-
-
