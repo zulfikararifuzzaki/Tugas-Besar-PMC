@@ -1,7 +1,7 @@
 from tkinter import *
 from output import *
 import ctypes 
-func_lib = ctypes.CDLL("F:/Codes/Git/Tugas-Besar-PMC/funlib.so")
+
 
 def input_circuit():
     if (Rcode == 4):
@@ -158,7 +158,7 @@ def updateImage(Rchange,Cchange):
     C_pic.itemconfig(C_picId, image=new_C)
 
 
-
+func_lib = ctypes.CDLL("F:/Codes/Git/Tugas-Besar-PMC/my_functions.so")
 
 root = Tk() 
 root.geometry('1300x900')

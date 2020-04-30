@@ -662,7 +662,7 @@ void executeAllProcess(){
     double tau = Req*Ceq;
 
     //assign value masing masing komponen ke struct Branch R dan C.
-    getValueComponent("contoh.txt",R_dummy,C_dummy,&R,&C);
+    getValueComponent("input_rangkaian_b.txt",R_dummy,C_dummy,&R,&C);
     
 
     // Memulai proses memecah branch dan mencetak sample point grafik ke file eksternal
