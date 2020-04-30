@@ -256,13 +256,13 @@ def createCircuit(canvas,screen):
 
     #labeling
     #resistor label
-    res_text1 = Label(screen,text="R1 = "+R[0]+" ohm", font=("arial",10))
+    res_text1 = Label(screen,text="R1 = "+R[1]+" ohm", font=("arial",10))
     res_text1.place(x=init_x+node3x_res[0]+10,y=init_y+node2y_res[0]-10) #x node pertama resistor, y node atas
     canvas.create_window(init_x+node3x_res[0]+10, init_y+node2y_res[0]-10, window=res_text1)
-    res_text2 = Label(screen,text="R2 = "+R[1]+" ohm", font=("arial",10))
+    res_text2 = Label(screen,text="R2 = "+R[2]+" ohm", font=("arial",10))
     res_text2.place(x=init_x+node3x_res[1]+10,y=init_y+node2y_res[1]-10) #x node pertama resistor, y node atas
     canvas.create_window(init_x+node3x_res[1]+10, init_y+node2y_res[1]-10, window=res_text2)
-    res_text3 = Label(screen,text="R3 = "+R[2]+" ohm", font=("arial",10))
+    res_text3 = Label(screen,text="R3 = "+R[3]+" ohm", font=("arial",10))
     res_text3.place(x=init_x+node3x_res[2]+10,y=init_y+node2y_res[2]-10) #x node pertama resistor, y node atas
     canvas.create_window(init_x+node3x_res[2]+10, init_y+node2y_res[2]-10, window=res_text3)
     #voltage label
@@ -276,13 +276,13 @@ def createCircuit(canvas,screen):
     vol_text.place(x=init_x+node2x_vol+40,y=init_y+tengahy)
     canvas.create_window(init_x+node2x_vol+40, init_y+tengahy, window=vol_text)
     #capasaitor label
-    cap_text1 = Label(screen,text="C1 = "+C[0]+" F", font=("arial",10))
+    cap_text1 = Label(screen,text="C1 = "+C[1]+" F", font=("arial",10))
     cap_text1.place(x=init_x+node3x_cap[0]+20,y=init_y+node3y_cap[0]+20)
     canvas.create_window(init_x+node3x_cap[0]+20, init_y+node3y_cap[0]+20, window=cap_text1)
-    cap_text2 = Label(screen,text="C2 = "+C[1]+" F", font=("arial",10))
+    cap_text2 = Label(screen,text="C2 = "+C[2]+" F", font=("arial",10))
     cap_text2.place(x=init_x+node3x_cap[1]+20,y=init_y+node3y_cap[1]+20)
     canvas.create_window(init_x+node3x_cap[1]+20, init_y+node3y_cap[1]+20, window=cap_text2)
-    cap_text3 = Label(screen,text="C3 = "+C[2]+" F", font=("arial",10))
+    cap_text3 = Label(screen,text="C3 = "+C[3]+" F", font=("arial",10))
     cap_text3.place(x=init_x+node3x_cap[2]+20,y=init_y+node3y_cap[2]+20)
     canvas.create_window(init_x+node3x_cap[2]+20, init_y+node3y_cap[2]+20, window=cap_text3)
 
