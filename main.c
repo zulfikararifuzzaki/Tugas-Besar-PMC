@@ -684,6 +684,7 @@ void executeAllProcess(){
     FILE * fptrIC1 = fopen("IC1.txt","w");
     FILE * fptrIC2 = fopen("IC2.txt","w");
     FILE * fptrIC3 = fopen("IC3.txt","w");
+    FILE * fptrVEq = fopen("VEq.txt","w");
     printToFileExt(&fptrVR1,R,C,'V','R',1,tau,Is,Vs);
     printToFileExt(&fptrVR2,R,C,'V','R',2,tau,Is,Vs);
     printToFileExt(&fptrVR3,R,C,'V','R',3,tau,Is,Vs);
@@ -696,6 +697,10 @@ void executeAllProcess(){
     printToFileExt(&fptrIC1,R,C,'I','C',1,tau,Is,Vs);
     printToFileExt(&fptrIC2,R,C,'I','C',2,tau,Is,Vs);
     printToFileExt(&fptrIC3,R,C,'I','C',3,tau,Is,Vs);
+    fprintf(fptrVEq,"%.4f\n",dataEq.V);
+    fprintf(fptrVEq,"%.4f\n",dataEq.R);
+    fprintf(fptrVEq,"%.4f",dataEq.C);
+
     fclose(fptrVR1);
     fclose(fptrVR2);
     fclose(fptrVR3);
@@ -708,11 +713,12 @@ void executeAllProcess(){
     fclose(fptrIC1);
     fclose(fptrIC2);
     fclose(fptrIC3);
+    fclose(fptrVEq);
 
 }
 int main(){
 
-    executeAllProcess();
+    	executeAllProcess();
 	return(0);
     
 }
